@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Price Calculator</title>
+
+    <!-- Icon for Web App -->
+    <link rel="apple-touch-icon" href="https://i.imgur.com/tzEwnX3.png">
+
+    <!-- Fallback Icon if no size is defined -->
+    <link rel="icon" href="https://i.imgur.com/tzEwnX3.png" sizes="any">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            position: relative;
+        }
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 0px;
+            background: #fff;
+            padding: 20px;
+            padding-bottom: calc(20px + 10%);
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: left;
+            position: relative;
+            box-sizing: border-box;
+        }
+        .logo {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .logo a {
+            display: inline-block;
+        }
+        .logo img {
+            max-width: 200px;
+            height: auto;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+            display: none;
+        }
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        label {
+            margin-bottom: 8px;
+            font-weight: bold;
+            color: #900000;
+        }
+        input[type="number"], input[type="text"], select {
+            width: 100%;
+            box-sizing: border-box;
+            padding: 12px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 18px;
+        }
+        input.error, select.error {
+            border-color: red;
+        }
+        input[type="number"] {
+            -moz-appearance: textfield;
+            -webkit-appearance: none;
+            appearance: none;
+        }
+        input[type="number"]::-webkit-inner-spin-button,
+        input[type="number"]::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none;
+        }
+        button {
+            width: 35%;
+            padding: 12px;
+            background-color: #900000;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            margin: 50px auto 0px;
+            display: block;
+            position: relative;
+        }
+        button:hover {
+            background-color: #6f0000;
+        }
+        button:active {
+            transform: scale(0.98);
+        }
+        .hidden {
+            display: none;
+        }
+        .price-container {
+            font-size: 20px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: -5px;
+            color: #900000;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            width: 100%;
+        }
+        #result {
+            display: flex;
+            align-items: center;
+            color: inherit;
+        }
+        #priceValue {
+            color: green;
+            margin-right: 10px;
+            margin-left: 5px;
+        }
+        #result.error {
+            color: #dc3545;
+        }
+        .calculation-id-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-top: 10px;
+            margin-bottom: -5px;
+            color: green;
+            font-weight: bold;
+            width: 100%;
+            position: relative;
+            user-select: text;
+        }
+        #calculationIDLabel {
+            margin-right: 5px;
+            color: #900000;
+        }
+        .language-selector {
+            position: absolute;
+            top: 40px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .language-selector select {
+            appearance: none;
+            border: none;
+            background: transparent;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        .language-selector option {
+            font-size: 20px;
+        }
+        .language-selector .flag {
+            font-size: 20px;
+        }
+        .exchange-rate-container {
+            text-align: center;
+            font-size: 14px;
+            font-weight: bold;
+            margin-top: 15px;
+            margin-bottom: -30px;
+            color: #900000;
+        }
+        #exchangeRate {
+            color: #900000;
+        }
+        .social-media {
+            text-align: center;
+            margin-top: 110px;
+        }
+        .social-media a {
+            margin: 0 15px;
+            text-decoration: none;
+            color: #900000;
+            font-size: 24px;
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            grid-auto-rows: 65px;
+            grid-column-gap: 15px;
+            margin-top: -30px;
+            max-width: 240px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .number-pad-button {
+            width: 100%;
+            height: 60px;
+            font-size: 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #900000;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+        }
+        .number-pad-button:hover {
+            background-color: #6f0000;
+        }
+        .checkmark {
+            font-size: 18px;
+            color: #900000;
+            margin-left: 5px;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        .checkmark.hidden {
+            opacity: 0;
+        }
+        .hidden-select {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <a href="https://carify.az" target="_blank" rel="noopener noreferrer">
+                <img src="https://i.imgur.com/2VNOtYi.png" alt="Logo">
+            </a>
+        </div>
+
+        <div class="language-selector">
+            <select id="language">
+                <option value="az" class="flag">🇦🇿</option>
+		<option value="en" class="flag">🇬🇧</option>
+                <option value="ru" class="flag">🇷🇺</option>
+                <option value="fr" class="flag">🇫🇷</option>
+                <option value="ar" class="flag">🇸🇦</option>
+            </select>
+        </div>
+
+        <h1 id="title"></h1>
+
+        <form id="priceCalculator">
+            <label for="D2"><span id="labelD2">Car Price</span>:</label>
+            <input type="number" id="D2" name="D2" placeholder="" required>
+            <div id="errorD2" class="error-message"></div>
+
+            <label for="internetLink"><span id="labelInternetLink">Link</span>:</label>
+            <input type="text" id="internetLink" name="internetLink" placeholder="https://example.com" required>
+            <div id="errorInternetLink" class="error-message"></div>
+
+            <label for="F2" class="hidden-select"><span id="labelF2">Dealer</span>:</label>
+            <select id="F2" name="F2" class="hidden-select" hidden required>
+                <option value="" disabled selected>Select Dealer</option>
+                <option value="Ümumi">Ümumi</option>
+                <option value="Qabil Güləhmdzadə">Qabil Güləhmdzadə</option>
+                <option value="Süleyman Yusubov" selected>Süleyman Yusubov</option>
+                <option value="Müseyib Məhərrəmli">Müseyib Məhərrəmli</option>
+                <option value="AvtoAL">AvtoAL</option>
+                <option value="Nazim Əliyev">Nazim Əliyev</option>
+            </select>
+            <div id="errorF2" class="error-message"></div>
+
+            <div class="calculation-id-container">
+                <div>
+                    <span id="calculationIDLabel">ID:</span> 
+                    <span id="calculationID">0</span>
+                </div>
+            </div>
+
+            <div class="price-container hidden" id="priceContainer">
+                <span id="labelPrice">Price:</span> 
+                <span id="result">
+                    <span id="priceValue">$0</span>
+                    <div id="checkmark" class="checkmark hidden">&#10003;</div>
+                </span>
+            </div>
+
+            <div class="exchange-rate-container">
+                <span id="exchangeRateLabel">Exchange Rate:</span> <span id="exchangeRate">₩0</span>
+            </div>
+
+            <button type="button" id="calculateButton">
+                <span id="calculateButtonText">Calculate</span>
+            </button>
+        </form>
+
+        <div class="number-pad">
+            <button class="number-pad-button">1</button>
+            <button class="number-pad-button">2</button>
+            <button class="number-pad-button">3</button>
+            <button class="number-pad-button">4</button>
+            <button class="number-pad-button">5</button>
+            <button class="number-pad-button">6</button>
+            <button class="number-pad-button">7</button>
+            <button class="number-pad-button">8</button>
+            <button class="number-pad-button">9</button>
+            <button class="number-pad-button">←</button>
+            <button class="number-pad-button">0</button>
+            <button class="number-pad-button">C</button>
+        </div>
+
+        <div class="social-media">
+            <a href="https://www.facebook.com/carifyAz" target="_blank" rel="noopener noreferrer" title="Facebook">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="https://www.instagram.com/carify.az/" target="_blank" rel="noopener noreferrer" title="Instagram">
+                <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://t.me/Carifyaz" target="_blank" rel="noopener noreferrer"><i class="fab fa-telegram"></i></a>
+            </a>
+            <a href="https://wa.me/+821072167665" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp"></i>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        const translations = {
+            en: {
+                labelD2: "Car Price",
+                labelF2: "Dealer",
+                labelPrice: "Price: ",
+                labelInternetLink: "Link",
+                exchangeRateLabel: "Exchange Rate:",
+                calculateButtonText: "Calculate",
+                error: "Error",
+                result: "Result",
+                selectDealer: "Select Dealer",
+                copiedText: "Copied!",
+                requiredFieldMessage: "This field is required."
+            },
+            ru: {
+                labelD2: "Aвтомобильная Цена",
+                labelF2: "Дилер",
+                labelPrice: "Цена: ",
+                labelInternetLink: "Cсылка",
+                exchangeRateLabel: "Курс Oбмена:",
+                calculateButtonText: "Рассчитать",
+                error: "Ошибка",
+                result: "Результат",
+                selectDealer: "Выберите Дилера",
+                copiedText: "Скопировано!",
+                requiredFieldMessage: "Это поле обязательно для заполнения."
+            },
+            az: {
+                labelD2: "Əsas Qiymət",
+                labelF2: "Alıcı",
+                labelPrice: "Qiymət: ",
+                labelInternetLink: "Link",
+                exchangeRateLabel: "Məzənnə:",
+                calculateButtonText: "Hesabla",
+                error: "Xəta",
+                result: "Nəticə",
+                selectDealer: "Satıcını Seçin",
+                copiedText: "Kopyalandı!",
+                requiredFieldMessage: "Bu sahə doldurulmalıdır."
+            },
+            fr: {
+                labelD2: "Prix ​​​​de la Voiture",
+                labelF2: "Revendeur",
+                labelPrice: "Prix Final: ",
+                labelInternetLink: "Lien",
+                exchangeRateLabel: "Taux de Change:",
+                calculateButtonText: "Calculer",
+                error: "Erreur",
+                result: "Résultat",
+                selectDealer: "Sélectionnez le Revendeur",
+                copiedText: "Copié!",
+                requiredFieldMessage: "Ce champ est requis."
+            },
+            ar: {
+                labelD2: "سعر السيارة",
+                labelF2: "تاجر",
+                labelPrice: "سعر: ",
+                labelInternetLink: "رابط",
+                exchangeRateLabel: "سعر الصرف:",
+                calculateButtonText: "احسب",
+                error: "خطأ",
+                result: "النتيجة",
+                selectDealer: "اختر تاجر",
+                copiedText: "تم النسخ!",
+                requiredFieldMessage: "هذه الخانة مطلوبه."
+            }
+        };
+
+        const setLanguage = (lang) => {
+            document.getElementById('labelD2').textContent = translations[lang].labelD2;
+            document.getElementById('labelF2').textContent = translations[lang].labelF2;
+            document.getElementById('labelPrice').textContent = translations[lang].labelPrice;
+            document.getElementById('labelInternetLink').textContent = translations[lang].labelInternetLink;
+            document.getElementById('exchangeRateLabel').textContent = translations[lang].exchangeRateLabel;
+            document.getElementById('calculateButtonText').textContent = translations[lang].calculateButtonText;
+        };
+
+        document.getElementById('language').addEventListener('change', (event) => {
+            setLanguage(event.target.value);
+        });
+
+        setLanguage('az');
+
+        const formatNumber = (number) => new Intl.NumberFormat('en-US', { minimumFractionDigits: 0 }).format(Math.round(number));
+        const formatCurrency = (number, symbol) => `${symbol}${formatNumber(number)}`;
+     
+
+	// Function to generate a random alphanumeric ID with 9 characters (letters and numbers)
+        const generateUniqueID = () => {
+            const characters = 'ABCDEFGHIJKLMNPQRSTUVWXYZ123456789';
+            let result = '';
+            const length = 7; // Maximum length of 7 characters
+            for (let i = 0; i < length; i++) {
+                result += characters.charAt(Math.floor(Math.random() * characters.length));
+            }
+            return result;
+        };
+
+
+        const validateForm = () => {
+            let isValid = true;
+            const D2Input = document.getElementById('D2');
+            const internetLinkInput = document.getElementById('internetLink');
+            const F2Select = document.getElementById('F2');
+
+            if (!D2Input.value.trim()) {
+                D2Input.classList.add('error');
+                document.getElementById('errorD2').style.display = 'block';
+                isValid = false;
+            } else {
+                D2Input.classList.remove('error');
+                document.getElementById('errorD2').style.display = 'none';
+            }
+
+            if (!internetLinkInput.value.trim()) {
+                internetLinkInput.classList.add('error');
+                document.getElementById('errorInternetLink').style.display = 'block';
+                isValid = false;
+            } else {
+                internetLinkInput.classList.remove('error');
+                document.getElementById('errorInternetLink').style.display = 'none';
+            }
+
+            if (!F2Select.value) {
+                F2Select.classList.add('error');
+                document.getElementById('errorF2').style.display = 'block';
+                isValid = false;
+            } else {
+                F2Select.classList.remove('error');
+                document.getElementById('errorF2').style.display = 'none';
+            }
+
+            return isValid;
+        };
+
+        // Function to send data to Google Sheets, including user local timestamp
+        const sendDataToGoogleSheet = async (carPrice, dealer, link, calculatedPrice, exchangeRate, calculationId) => {
+            const numberOfDigits = carPrice.toString().replace(/[^0-9]/g, '').length;
+            const convertedCarPrice = numberOfDigits < 7 ? carPrice * 10000 : carPrice;
+
+            const formattedCarPrice = `₩${formatNumber(convertedCarPrice)}`;
+            const formattedPrice = `$${formatNumber(calculatedPrice)}`;
+            const formattedExchangeRate = formatCurrency(exchangeRate, '₩');
+
+            const formatDate = (date) => {
+		const day = String(date.getDate()).padStart(2, '0');
+		const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    		const year = date.getFullYear();
+    		return `${day}/${month}/${year}`;
+	    };
+
+	    const timestamp = formatDate(new Date());
+ 
+
+            const data = {
+                carPrice: formattedCarPrice, 
+                dealer: dealer,
+                link: link,
+                calculatedPrice: formattedPrice,
+                exchangeRate: formattedExchangeRate, 
+                calculationId: calculationId,
+                timestamp: timestamp 
+            };
+
+            fetch("https://script.google.com/macros/s/AKfycbywLKXUSDZiLmMef4P49AyLkC5WAYFULfXMkxCYY7JrznqU4THbfaxkXYoFCOaLXCwA/exec", {
+                method: "POST",
+                mode: "no-cors",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded"
+                },
+                body: new URLSearchParams(data)
+            }).catch(function(error) {
+                console.error("Error:", error);
+            });
+        };
+
+        const calculatePrice = async () => {
+            if (!validateForm()) {
+                return;
+            }
+
+            const D2Input = document.getElementById('D2');
+            const F2Select = document.getElementById('F2');
+            const internetLinkInput = document.getElementById('internetLink');
+            const D2 = parseFloat(D2Input.value);
+            const F2 = F2Select.value;
+            const internetLink = internetLinkInput.value.trim();
+
+            if (!F2) {
+                return;
+            }
+
+            if (isNaN(D2) || D2 <= 0) {
+                document.getElementById('priceValue').textContent = '$0';
+                document.getElementById('result').classList.add('error');
+                document.getElementById('exchangeRate').textContent = '₩0';
+                return;
+            }
+
+            const numberOfDigits = D2.toString().replace(/[^0-9]/g, '').length;
+            const adjustedBasePrice = numberOfDigits < 7 ? D2 * 10000 : D2;
+
+            let KRWUSD = 0;
+
+            try {
+                const apiKey = 'f5106c228dd6e51b2d42b7f5';
+                const response = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`);
+                if (!response.ok) throw new Error('Network response was not ok');
+                const data = await response.json();
+                KRWUSD = data.conversion_rates.KRW;
+
+                const adjustedBasePriceUSD = adjustedBasePrice / KRWUSD;
+
+                const options = {
+                    "Ümumi": { feeUnder20k: 0.03, feeOver20k: 0.04, adjustmentUnder20k: 250, adjustmentOver20k: 50 },
+                    "Qabil Güləhmdzadə": { feeUnder20k: 0.035, feeOver20k: 0.045, adjustmentUnder20k: 200, adjustmentOver20k: 0 },
+                    "Süleyman Yusubov": { feeUnder20k: 0.035, feeOver20k: 0.045, adjustmentUnder20k: 200, adjustmentOver20k: 0 },
+                    "Müseyib Məhərrəmli": { feeUnder20k: 0.035, feeOver20k: 0.045, adjustmentUnder20k: 200, adjustmentOver20k: 0 },
+                    "AvtoAL": { feeUnder20k: 0.035, feeOver20k: 0.045, adjustmentUnder20k: 200, adjustmentOver20k: 0 },
+                    "Nazim Əliyev": { feeUnder20k: 0.03, feeOver20k: 0.04, adjustmentUnder20k: 400, adjustmentOver20k: 200 },
+                };
+
+                const selectedOption = options[F2];
+                if (!selectedOption) {
+                    console.error('Invalid customer option selected');
+                    return;
+                }
+
+                const feePercent = adjustedBasePriceUSD < 20000 ? selectedOption.feeUnder20k : selectedOption.feeOver20k;
+                const adjustment = adjustedBasePriceUSD < 20000 ? selectedOption.adjustmentUnder20k : selectedOption.adjustmentOver20k;
+
+                const feeAmount = adjustedBasePriceUSD / 1.1 * feePercent;
+                let finalPriceUSD = adjustedBasePriceUSD - feeAmount + adjustment;
+
+                const formattedPrice = formatNumber(finalPriceUSD);
+                document.getElementById('priceValue').textContent = `$${formattedPrice}`;
+                document.getElementById('result').classList.remove('error');
+
+                const formattedExchangeRate = formatCurrency(KRWUSD, '₩');
+                document.getElementById('exchangeRate').textContent = formattedExchangeRate;
+
+                const checkmark = document.getElementById('checkmark');
+                checkmark.classList.remove('hidden');
+
+                setTimeout(() => {
+                    checkmark.classList.add('hidden');
+                }, 500);
+
+                const uniqueID = generateUniqueID();
+                const calcIDElement = document.getElementById('calculationID');
+                calcIDElement.textContent = `${uniqueID}`;
+
+                sendDataToGoogleSheet(D2, F2, internetLink, finalPriceUSD, KRWUSD, uniqueID);
+
+            } catch (error) {
+                console.error('Error fetching exchange rates:', error);
+                document.getElementById('priceValue').textContent = 'Error';
+                document.getElementById('result').classList.add('error');
+                document.getElementById('exchangeRate').textContent = 'Error';
+            }
+
+            document.getElementById('priceContainer').classList.remove('hidden');
+        };
+
+        document.getElementById('calculateButton').addEventListener('click', calculatePrice);
+
+        document.querySelectorAll('.number-pad-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const D2Input = document.getElementById('D2');
+                const F2Select = document.getElementById('F2');
+                const internetLinkInput = document.getElementById('internetLink');
+                const calcIDElement = document.getElementById('calculationID');
+                const value = button.textContent;
+
+                if (value === '←') {
+                    D2Input.value = D2Input.value.slice(0, -1);
+                } else if (value === 'C') {
+                    D2Input.value = '';
+                    F2Select.value = '';
+                    internetLinkInput.value = '';
+                    calcIDElement.textContent = '0';
+
+                    document.getElementById('priceContainer').classList.add('hidden');
+                    document.getElementById('priceValue').textContent = '$0';
+                } else {
+                    D2Input.value += value;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
