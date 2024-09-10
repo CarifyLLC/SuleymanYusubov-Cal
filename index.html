@@ -604,45 +604,31 @@
 
         document.getElementById('calculateButton').addEventListener('click', calculatePrice);
 
-        document.querySelectorAll('.number-pad-button').forEach(button => {
-	    button.addEventListener('click', () => {
-	        const D2Input = document.getElementById('D2');
-	        const F2Select = document.getElementById('F2');
-	        const internetLinkInput = document.getElementById('internetLink');
-	        const calcIDElement = document.getElementById('calculationID');
-	        const value = button.textContent;
-	
-	        if (value === '←') {
-	            D2Input.value = D2Input.value.slice(0, -1);
-	        } else if (value === 'C') {
-	            // Clear the input fields
-	            D2Input.value = '';
-	            F2Select.value = '';
-	            internetLinkInput.value = '';
-	            calcIDElement.textContent = '0';
-	
-	            // Hide the price container and reset values
-	            document.getElementById('priceContainer').classList.add('hidden');
-	            document.getElementById('priceValue').textContent = '$0';
-	            document.getElementById('exchangeRate').textContent = '₩0';
-	
-	            // Reset any error messages
-	            document.getElementById('errorD2').style.display = 'none';
-	            document.getElementById('errorInternetLink').style.display = 'none';
-	            document.getElementById('errorF2').style.display = 'none';
-	
-	            // Remove any error styles
-	            D2Input.classList.remove('error');
-	            internetLinkInput.classList.remove('error');
-	            F2Select.classList.remove('error');
-	            
-	            // Reset the result styling and exchange rate
-	            document.getElementById('result').classList.remove('error');
-	        } else {
-	            D2Input.value += value;
-	        }
-	    });
-	});
+                document.querySelectorAll('.number-pad-button').forEach(button => {
+            button.addEventListener('click', () => {
+                const D2Input = document.getElementById('D2');
+                const F2Select = document.getElementById('F2');
+                const internetLinkInput = document.getElementById('internetLink');
+                const calcIDElement = document.getElementById('calculationID');
+		const fetchCalculationIDInput = document.getElementById('fetchCalculationID');
+                const value = button.textContent;
+
+                if (value === '←') {
+                    D2Input.value = D2Input.value.slice(0, -1);
+                } else if (value === 'C') {
+                    D2Input.value = '';
+                    F2Select.value = '';
+                    internetLinkInput.value = '';
+                    calcIDElement.textContent = '0';
+		    fetchCalculationIDInput.value = '';
+
+                    document.getElementById('priceContainer').classList.add('hidden');
+                    document.getElementById('priceValue').textContent = '$0';
+                } else {
+                    D2Input.value += value;
+                }
+            });
+        });
     </script>
 </body>
 </html>
