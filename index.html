@@ -615,14 +615,29 @@
 	        if (value === '←') {
 	            D2Input.value = D2Input.value.slice(0, -1);
 	        } else if (value === 'C') {
+	            // Clear the input fields
 	            D2Input.value = '';
 	            F2Select.value = '';
 	            internetLinkInput.value = '';
 	            calcIDElement.textContent = '0';
 	
+	            // Hide the price container and reset values
 	            document.getElementById('priceContainer').classList.add('hidden');
 	            document.getElementById('priceValue').textContent = '$0';
-	            document.getElementById('exchangeRate').textContent = '₩0'; // Reset the exchange rate as well
+	            document.getElementById('exchangeRate').textContent = '₩0';
+	
+	            // Reset any error messages
+	            document.getElementById('errorD2').style.display = 'none';
+	            document.getElementById('errorInternetLink').style.display = 'none';
+	            document.getElementById('errorF2').style.display = 'none';
+	
+	            // Remove any error styles
+	            D2Input.classList.remove('error');
+	            internetLinkInput.classList.remove('error');
+	            F2Select.classList.remove('error');
+	            
+	            // Reset the result styling and exchange rate
+	            document.getElementById('result').classList.remove('error');
 	        } else {
 	            D2Input.value += value;
 	        }
