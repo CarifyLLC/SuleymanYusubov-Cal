@@ -605,28 +605,29 @@
         document.getElementById('calculateButton').addEventListener('click', calculatePrice);
 
         document.querySelectorAll('.number-pad-button').forEach(button => {
-            button.addEventListener('click', () => {
-                const D2Input = document.getElementById('D2');
-                const F2Select = document.getElementById('F2');
-                const internetLinkInput = document.getElementById('internetLink');
-                const calcIDElement = document.getElementById('calculationID');
-                const value = button.textContent;
-
-                if (value === '←') {
-                    D2Input.value = D2Input.value.slice(0, -1);
-                } else if (value === 'C') {
-                    D2Input.value = '';
-                    F2Select.value = '';
-                    internetLinkInput.value = '';
-                    calcIDElement.textContent = '0';
-
-                    document.getElementById('priceContainer').classList.add('hidden');
-                    document.getElementById('priceValue').textContent = '$0';
-                } else {
-                    D2Input.value += value;
-                }
-            });
-        });
+	    button.addEventListener('click', () => {
+	        const D2Input = document.getElementById('D2');
+	        const F2Select = document.getElementById('F2');
+	        const internetLinkInput = document.getElementById('internetLink');
+	        const calcIDElement = document.getElementById('calculationID');
+	        const value = button.textContent;
+	
+	        if (value === '←') {
+	            D2Input.value = D2Input.value.slice(0, -1);
+	        } else if (value === 'C') {
+	            D2Input.value = '';
+	            F2Select.value = '';
+	            internetLinkInput.value = '';
+	            calcIDElement.textContent = '0';
+	
+	            document.getElementById('priceContainer').classList.add('hidden');
+	            document.getElementById('priceValue').textContent = '$0';
+	            document.getElementById('exchangeRate').textContent = '₩0'; // Reset the exchange rate as well
+	        } else {
+	            D2Input.value += value;
+	        }
+	    });
+	});
     </script>
 </body>
 </html>
