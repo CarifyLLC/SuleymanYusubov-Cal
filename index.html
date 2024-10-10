@@ -499,9 +499,9 @@
 
                 const adjustedBasePriceUSD = adjustedBasePrice / KRWUSD;
 
-                const feeUnder20k = 0.035;
-                const feeOver20k = 0.045;
-                const adjustmentUnder20k = 200;
+                const feeUnder20k = 0.03;
+                const feeOver20k = 0.035;
+                const adjustmentUnder20k = 250;
                 const adjustmentOver20k = 0;
 
                 const feePercent = adjustedBasePriceUSD < 20000 ? feeUnder20k : feeOver20k;
