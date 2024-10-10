@@ -502,7 +502,7 @@
                 const feeUnder20k = 0.03;
                 const feeOver20k = 0.035;
                 const adjustmentUnder20k = 250;
-                const adjustmentOver20k = 0;
+                const adjustmentOver20k = 50;
 
                 const feePercent = adjustedBasePriceUSD < 20000 ? feeUnder20k : feeOver20k;
                 const adjustment = adjustedBasePriceUSD < 20000 ? adjustmentUnder20k : adjustmentOver20k;
