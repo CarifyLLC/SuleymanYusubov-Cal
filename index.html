@@ -496,6 +496,9 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
                 KRWUSD = data.conversion_rates.KRW;
+		// Fetch KRW/USD rate and apply a 15₩ subtraction
+    		let KRWUSD = data.conversion_rates.KRW;
+   		KRWUSD -= 15; //
 
                 const adjustedBasePriceUSD = adjustedBasePrice / KRWUSD;
 
