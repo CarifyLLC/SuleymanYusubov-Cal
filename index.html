@@ -490,12 +490,47 @@
 
             let KRWUSD = 0;
 
-            try {
-                const apiKey = 'f5106c228dd6e51b2d42b7f5';
-                const response = await fetch(`https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`);
-                if (!response.ok) throw new Error('Network response was not ok');
-                const data = await response.json();
-                KRWUSD = data.conversion_rates.KRW;
+            async function fetchAndAdjustExchangeRate() {
+	        try {
+	            const apiKey = 'f5106c228dd6e51b2d42b7f5';
+	            const apiUrl = `https://v6.exchangerate-api.com/v6/${apiKey}/latest/USD`;
+	
+	            // Fetch exchange rate data
+	            const response = await fetch(apiUrl);
+	            if (!response.ok) throw new Error('Failed to fetch exchange rate data.');
+	
+	            const data = await response.json();
+	
+	            // Check if KRW conversion rate exists in the response
+	            if (!data.conversion_rates || !data.conversion_rates.KRW) {
+	            throw new Error('KRW conversion rate not found in API response.');
+	            }
+	
+	            // Fetch the original KRW/USD rate
+	            const originalKRWUSD = data.conversion_rates.KRW;
+	
+	            // Subtract 15₩ from the fetched rate
+	            const adjustedKRWUSD = originalKRWUSD - 15;
+	
+	            console.log(`Original KRW/USD Rate: ${originalKRWUSD}`);
+	            console.log(`Adjusted KRW/USD Rate: ${adjustedKRWUSD}`);
+	    
+	            // Return the adjusted value for use in your application
+	            return adjustedKRWUSD;
+	        } catch (error) {
+	            console.error('Error:', error.message);
+	            return null; // Handle errors gracefully
+	        }
+	    }
+	
+    	    // Call the function and handle the result
+	    fetchAndAdjustExchangeRate().then(adjustedRate => {
+	        if (adjustedRate !== null) {
+	            console.log(`The final adjusted exchange rate is: ${adjustedRate}₩ per USD`);
+	        } else {
+	            console.log('Unable to calculate the exchange rate.');
+	        }
+	    });
 
                 const adjustedBasePriceUSD = adjustedBasePrice / KRWUSD;
 
