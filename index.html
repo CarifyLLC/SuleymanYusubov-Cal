@@ -501,11 +501,13 @@
                 if (!response.ok) throw new Error('Network response was not ok');
                 const data = await response.json();
 
-		// Fetch KRW/USD rate and apply a 15₩ subtraction
-    		let KRWUSD = data.conversion_rates.KRW;
-   		KRWUSD -= 4; //
+		// Fetch KRW/USD rate
+        	const rawExchangeRate = data.conversion_rates.KRW;
+        	const adjustedExchangeRate = rawExchangeRate - 15; // Subtract 15 KRW for calculations
 
-                const adjustedBasePriceUSD = adjustedBasePrice / KRWUSD;
+        	// Calculate adjusted base price in USD
+        	const adjustedBasePriceUSD = adjustedBasePrice / adjustedExchangeRate;
+
 
                 const feeUnder20k = 0.03;
                 const feeOver20k = 0.035;
@@ -522,8 +524,9 @@
                 document.getElementById('priceValue').textContent = `$${formattedPrice}`;
                 document.getElementById('result').classList.remove('error');
 
-                const formattedExchangeRate = formatCurrency(KRWUSD, '₩');
-                document.getElementById('exchangeRate').textContent = formattedExchangeRate;
+                // Display raw exchange rate
+        	const formattedRawExchangeRate = formatCurrency(rawExchangeRate, '₩');
+        	document.getElementById('exchangeRate').textContent = formattedRawExchangeRate;
 
                 const checkmark = document.getElementById('checkmark');
                 checkmark.classList.remove('hidden');
