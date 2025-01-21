@@ -433,7 +433,7 @@
             return isValid;
         };
 
-        const sendDataToGoogleSheet = async (carPrice, link, calculatedPrice, exchangeRate, calculationId) => {
+        const sendDataToGoogleSheet = async (carPrice, link, calculatedPrice, rawExchangeRate, calculationId) => {
             const sender = document.getElementById('sender').value;
 	    const numberOfDigits = carPrice.toString().replace(/[^0-9]/g, '').length;
             const convertedCarPrice = numberOfDigits < 7 ? carPrice * 10000 : carPrice;
